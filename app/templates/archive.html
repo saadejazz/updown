@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="table-responsive">
+    <table class="table table-sm table-borderless mb-0" style="margin-left: auto; margin-right: auto;">
+        <thead class="thead-dark">
+            <tr>
+                <th>S/N</th>
+                <th>File Identifier</th>
+                <th>File Name</th>
+                <th>Time Uploaded</th>
+                <th>Download</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files.items %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td style="text-align: center;">{{ file.id }}</td>
+                <td style="text-align: center;">{{ file.name }}</td>
+                <td style="text-align: center;">{{ file.timestamp }}</td>
+                <td style="text-align: center;"><a target="_blank" href="{{ url_for('download', code=file.id) }}"><i class="fa fa-download"></i>
+                </a></td>
+                <td style="text-align: center;"><a href="{{ url_for('delete', code=file.id) }}"><i class="fa fa-trash"></i>
+                </a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination Links-->
+<div class="text-right" style="color: black;">
+    <a href="{{ url_for('archive', page=files.prev_num) }}"
+       class="btn btn-outline-dark 
+       {% if files.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a><!-- Loop through the number of pages to display a link for each-->
+    {% for page_num in files.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}{% if page_num %}
+<!-- Check for the active page and set the link to "Active"-->
+            {% if files.page == page_num %}
+            <a href="{{ url_for('archive', page=page_num) }}"
+               class="btn btn-dark">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('archive', page=page_num) }}"
+               class="btn btn-outline-dark">
+                {{ page_num }}
+            </a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}    <a href="{{ url_for('archive', page=files.next_num) }}"
+       class="btn btn-outline-dark 
+       {% if files.page == files.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3" style="color: black;">
+   Showing page {{ files.page }} of {{ files.pages }}
+</p>
+
+<br>
+
+<div>
+    <h3 style="color: black;">
+        <b>CAUTION!</b> <br> To delete all files from archive: <td style="text-align: center;"><a href="{{ url_for('delete_all') }}"><i style="font-size: 20px;" class="fa fa-trash"></i>
+        </a></td>
+    </h3>
+</div>
+{% endblock %}
