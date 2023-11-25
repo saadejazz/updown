@@ -1,0 +1,6 @@
+alembic
+flask
+Flask-Login
+Flask-SQLAlchemy
+Flask-Migrate
+Werkzeug

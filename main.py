@@ -1,19 +1,11 @@
-import json
 from werkzeug.security import check_password_hash
-from flask import Blueprint, render_template, redirect, send_file, url_for, request, flash, jsonify
+from flask import render_template, redirect, send_file, url_for, request, flash, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
-from app import db, generate_random_code, app
+from app import db, app
 from app.models import User, File
 import os
-import datetime
-from flask_tor import run_with_tor
-
-
-from werkzeug.security import generate_password_hash
 
 upload_directory = "uploads/"
-domain = "http://127.0.0.1:5000/"
-# port = run_with_tor()
 
 @app.route('/login')
 def login():
@@ -32,10 +24,12 @@ def login_post():
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
-        return redirect(url_for('login')) # if the user doesn't exist or password is wrong, reload the page
+        
+        # if the user doesn't exist or password is wrong, reload the page
+        return redirect(url_for('login')) 
 
     # if the above check passes, then we know the user has the right credentials
-    login_user(user, remember=remember)
+    login_user(user, remember = remember)
     return redirect(url_for('index'))
 
 @app.route('/logout')
