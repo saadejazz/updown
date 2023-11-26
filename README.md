@@ -9,11 +9,21 @@ git clone https://github.com/saadejazz/updown.git
 ```bash
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install python3.8 python3-pip python3-venv
+sudo apt-get install python3 python3-pip python3-venv
 sudo apt-get install apache2 libapache2-mod-wsgi-py3
+
+cd updown
 python3 -m venv venv 
 source venv/bin/activate
 pip3 install -r requirements.txt
+```
+Change ```main.wsgi``` to indicate your python version (3.10 for Ubuntu 22.04).  
+If Apache failed to start, the port may already be in use (by nginx potentialy), in which case: kill the PID using the port:  
+```
+sudo systemctl stop nginx
+netstat -ltnp | grep :80
+sudo kill -9 <pid>
+sudo service apache2 restart
 ```
 
 3. Initialize the db using:  
@@ -25,11 +35,12 @@ flask db upgrade
 
 4. Add a user by providing the email, password, and name in the ```generate_user.py``` file, then run:  
 ```
-python generate_user.py
+python3 generate_user.py
 ```
 
 5. Move the project ```updown``` to the required directory:  
 ```
+cd ..
 sudo mkdir -p /var/www/
 sudo mv updown /var/www/ftor
 ```
@@ -59,8 +70,9 @@ Then paste the following configuration:
         CustomLog ${APACHE_LOG_DIR}/ftor-access.log combined
 </VirtualHost>
 ```
-Then enable the new configuration:  
+Then enable the new configuration and disable the default one:  
 ```
+sudo a2dissite 000-default.conf
 sudo a2ensite ftor.com
 ```
 Finally, give permissions to directories that need it  
@@ -81,7 +93,7 @@ sudo systemctl reload apache2
 sudo apt-get install tor openssl basez
 ```
 
-8. Add/uncomment the following configuration in torrc 
+8. Add/uncomment the following configuration in ```/etc/tor/torrc```
 ```
 HiddenServiceDir /var/lib/tor/ftor/
 HiddenServicePort 80 127.0.0.1:80
