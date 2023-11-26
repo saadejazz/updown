@@ -1,7 +1,9 @@
 ## Steps to install and configure 
 
 1. Clone the repository  
-```git clone https://github.com/saadejazz/updown.git```
+```
+git clone https://github.com/saadejazz/updown.git
+```
 
 2. Install python3, apache, and the requirements:  
 ```bash
@@ -22,7 +24,9 @@ flask db upgrade
 ```
 
 4. Add a user by providing the email, password, and name in the ```generate_user.py``` file, then run:  
-```python generate_user.py```
+```
+python generate_user.py
+```
 
 5. Move the project ```updown``` to the required directory:  
 ```
@@ -31,7 +35,9 @@ sudo mv updown /var/www/ftor
 ```
 
 6. Add the configuration in ```sites-available``` by:  
-```sudo nano /etc/apache2/sites-available/ftor.com.conf``` 
+```
+sudo nano /etc/apache2/sites-available/ftor.com.conf
+``` 
 Then paste the following configuration:  
 ```bash
 <VirtualHost *:80>
@@ -53,9 +59,11 @@ Then paste the following configuration:
         CustomLog ${APACHE_LOG_DIR}/ftor-access.log combined
 </VirtualHost>
 ```
-And then enable the new configuration:  
-```sudo a2ensite ftor.com```
-Give permissions to directories that need it  
+Then enable the new configuration:  
+```
+sudo a2ensite ftor.com
+```
+Finally, give permissions to directories that need it  
 ```
 sudo mkdir /uploads
 sudo chown -R www-data:www-data /uploads
@@ -64,10 +72,14 @@ sudo chmod 756 /var/www/ftor/instance/db.sqlite
 ```
 
 Restart the apache2 service:  
-```sudo systemctl reload apache2```
+```
+sudo systemctl reload apache2
+```
 
 7. Install tor and key generation tools using:  
-```sudo apt-get install tor openssl basez```
+```
+sudo apt-get install tor openssl basez
+```
 
 8. Add/uncomment the following configuration in torrc 
 ```
@@ -76,10 +88,14 @@ HiddenServicePort 80 127.0.0.1:80
 ```
 
 9. Restart the tor service 
-```sudo systemctl reload tor```
+```
+sudo systemctl reload tor
+```
 
 10. Get the generated hostname from the file  
- ```sudo cat /var/lib/tor/ftor/hostname```
+ ```
+sudo cat /var/lib/tor/ftor/hostname
+```
 
 11. Generate the keys and copy the public key for the next step
 ```
@@ -90,7 +106,11 @@ cat /tmp/k1.pub.key
 ```
 
 12. Create an authorized client by pasting ```descriptor:x25519:<pub-key>``` into ```/var/lib/tor/ftor/authorized_clients/john.auth```, and then restart the tor service - wait for it to reload:  
-```sudo systemctl reload tor```
+```
+sudo systemctl reload tor
+```
 
 13. The password to the onion site can be copied:  
-```cat /tmp/k1.prv.key```
+```
+cat /tmp/k1.prv.key
+```
