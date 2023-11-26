@@ -1,6 +1,7 @@
-uploads/*
+uploads
 app/db.sqlite
 migrations
+creds.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
